@@ -48,7 +48,6 @@ Write-Host -ForegroundColor Green ""
 Write-Host -ForegroundColor Green "*** FAKE it: target $Target ($Configuration) in $repositoryDir"
 
 # Set build configuration settings via environment variables
-[Environment]::SetEnvironmentVariable("Build_SolutionName", "Skitter", "Process")
 [Environment]::SetEnvironmentVariable("Build_RepositoryDir", $repositoryDir, "Process")
 [Environment]::SetEnvironmentVariable("Build_Configuration", $Configuration, "Process")
 [Environment]::SetEnvironmentVariable("Build_Runtime", $Runtime, "Process")
