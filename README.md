@@ -8,6 +8,8 @@ Build system is based on [FAKE](https://fake.build/), a DSL for build tasks.
 This bootstrapper can be used as is with no modifications, or use this as a
 starting point to create your own build system.
 
+One of the benefits of using this build system is that it can run all the tests across all test projects in the solution in one go, something that .NET Core CLI cannot do at the moment.
+
 ## Prerequisites
 
 Solution is expected to have following structure:
@@ -30,7 +32,7 @@ Solution is expected to have following structure:
 - source code is in the `src` directory
 - project directory name matches project file name
 - test projects have `Tests` suffix
-- test projects are implemeted using `xUnit`
+- test projects are implemeted using `xUnit` or other framework that provides .NET Core - compatible runner (i.e. runnable via `dotnet test`)
 - test projects can use either C# or F#
 
 .NET Core needs to be installed so that `dotnet` command is available.
