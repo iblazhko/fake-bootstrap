@@ -35,8 +35,9 @@ Solution is expected to have following structure:
 
 .NET Core needs to be installed so that `dotnet` command is available.
 
-If you are on Linux, it is recommended to install PowerShell Core:
+If you are on Linux, you can install PowerShell Core:
 <https://docs.microsoft.com/en-us/powershell/scripting/setup/installing-powershell-core-on-linux>
+and use exactly the same build scripts on both Linux and Windows.
 
 ## Installation
 
@@ -51,11 +52,13 @@ level with `src`:
         Solution.sln
         ...
 
-If you are on Linux, make build scripts executable:
+If you are planning on using Linux bash scripts, make them executable:
 
 ```sh
 chmod u+x ./build/*.sh
 ```
+
+If you are planning on using only PowerShell scripts, bash scripts (`*.sh`) can be removed.
 
 ## Usage
 
