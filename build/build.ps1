@@ -7,7 +7,7 @@ Param(
     [string]$Configuration="Release",
 
     [ValidateNotNullOrEmpty()]
-    [ValidateSet("any", "win-x64", "linux-x64")]
+    [ValidateSet("any", "win-x64", "linux-x64", "linux-arm")]
     [string]$Runtime="linux-x64"
 )
 
