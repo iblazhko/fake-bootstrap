@@ -27,6 +27,7 @@ echo "*** Purging ${REPOSITORY_DIR}"
 
 find "${REPOSITORY_DIR}" -depth -name "bin" -type d -exec rm -rf "{}" \;
 find "${REPOSITORY_DIR}" -depth -name "obj" -type d -exec rm -rf "{}" \;
+find "${REPOSITORY_DIR}" -depth -name "TestResults" -type d -exec rm -rf "{}" \;
 
 find "${SCRIPT_DIR}" -maxdepth 1 -name "reports" -type d -exec rm -rf "{}" \;
 find "${SCRIPT_DIR}" -maxdepth 1 -name "fake" -type d -exec rm -rf "{}" \;

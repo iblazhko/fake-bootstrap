@@ -20,6 +20,7 @@ Write-Host -ForegroundColor Red "*** Purging $Repository"
 
 Get-ChildItem -Path $Repository -Filter 'bin' -Directory -Recurse | ForEach-Object { $_.Delete($true) }
 Get-ChildItem -Path $Repository -Filter 'obj' -Directory -Recurse | ForEach-Object { $_.Delete($true) }
+Get-ChildItem -Path $Repository -Filter 'TestResults' -Directory -Recurse | ForEach-Object { $_.Delete($true) }
 
 if (Test-Path $nugetPackagesDir)
 {
