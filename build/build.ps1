@@ -17,6 +17,8 @@ $fakeDir=[System.IO.Path]::Combine($buildDir, "fake")
 $fake=[System.IO.Path]::Combine($fakeDir, "fake")
 $buildScript=[System.IO.Path]::Combine($buildDir, "build.fsx")
 
+$requiredDotnetVersion = "2.1"
+
 # Purge target requires special treatment
 if ($Target -eq "Purge")
 {
@@ -25,7 +27,17 @@ if ($Target -eq "Purge")
 }
 
 # Check if .NET CLI is available
-try { dotnet --version | Out-Null }
+try
+{
+    [System.Version]$dotnetVersion = dotnet --version
+    [System.Version]$minSupportedDotnetVersion = $requiredDotnetVersion
+
+    if (-Not($dotnetVersion -ge $minSupportedDotnetVersion))
+    {
+        Write-Host -ForegroundColor Red "*** Required 'dotnet' version $requiredDotnetVersion or higher. Install .NET Core SDK from https://www.microsoft.com/net/download"
+        Exit 1
+    }
+}
 catch
 {
     Write-Host -ForegroundColor Red "*** 'dotnet' is not available. Install .NET Core from https://www.microsoft.com/net/download"
