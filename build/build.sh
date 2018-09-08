@@ -4,6 +4,7 @@
 TARGET="FullBuild"
 CONFIGURATION="Release"
 RUNTIME="linux-x64"
+REQUIRED_DOTNET_VERSION="2.1"
 
 while [[ $# -gt 1 ]]
 do
@@ -59,9 +60,23 @@ if [ "${TARGET}" = "Purge" ]; then
 fi
 
 ### Check if .NET CLI is available
+ver_lt() {
+    [  "$1" = "`echo -e "$1\n$2" | sort -n | head -n1`" ]
+}
+
+ver_lte() {
+    [ "$1" = "$2" ] && return 1 || ver_lt $1 $2
+}
+
 dotnet_version=`dotnet --version 2>/dev/null`
 if [ $? -ne 0 ]; then
     echo "*** 'dotnet' is not available. Install .NET Core from https://www.microsoft.com/net/download"
+    exit 1
+fi
+
+ver_lt "$dotnet_version" "$REQUIRED_DOTNET_VERSION"
+if [ $? -eq 0 ]; then
+    echo "*** Required 'dotnet' version $REQUIRED_DOTNET_VERSION or higher. Install .NET Core from https://www.microsoft.com/net/download"
     exit 1
 fi
 
