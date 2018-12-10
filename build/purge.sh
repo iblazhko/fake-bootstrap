@@ -3,18 +3,22 @@
 REPOSITORY_DIR="$1"
 
 ### Directory of this script
-pushd . > /dev/null
-SCRIPT_DIR="${BASH_SOURCE[0]}"
-while([ -h "${SCRIPT_DIR}" ]); do
-    cd "`dirname "${SCRIPT_DIR}"`"
-    SCRIPT_DIR="$(readlink "`basename "${SCRIPT_DIR}"`")"
+# https://stackoverflow.com/a/246128
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$SCRIPT_DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
-cd "`dirname "${SCRIPT_DIR}"`" > /dev/null
-SCRIPT_DIR="`pwd`"
-popd  > /dev/null
+SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
+
+pushd . > /dev/null
+cd "${SCRIPT_DIR}/.."
+SCRIPT_PARENT_DIR=`pwd`
+popd > /dev/null
 
 if  [ "${REPOSITORY_DIR}" = "" ]; then
-    REPOSITORY_DIR=`realpath "${SCRIPT_DIR}/.."`
+    REPOSITORY_DIR="$SCRIPT_PARENT_DIR"
 fi
 
 if ! [ -d "${REPOSITORY_DIR}" ]; then

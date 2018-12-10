@@ -6,45 +6,59 @@ CONFIGURATION="Release"
 RUNTIME="linux-x64"
 REQUIRED_DOTNET_VERSION="2.1"
 
-while [[ $# -gt 1 ]]
-do
-key="$1"
+USAGE_HELP="""USAGE:
+    build.sh [-t|--target <TargetName>]
+             [-c|--configuration <ConfigurationName>]
+             [-r|--runtime <RuntimeId>]
+"""
 
-case $key in
-    -t|--target)
-    TARGET="$2"
-    shift # past argument
-    ;;
-    -c|--configuration)
-    CONFIGURATION="$2"
-    shift # past argument
-    ;;
-    -r|--runtime)
-    RUNTIME="$2"
-    shift # past argument
-    ;;
-    *)
-            # unknown option
-    ;;
-esac
-shift # past argument or value
+while [ $# -gt 0 ]
+do
+    key="$1"; shift
+    if [ $# -gt 0 ]; then value="$1"; shift; else value=""; fi
+
+    case $key in
+        -t|--target)
+            TARGET="$value"
+            ;;
+        -c|--configuration)
+            CONFIGURATION="$value"
+            ;;
+        -r|--runtime)
+            RUNTIME="$value"
+            ;;
+        *)
+            echo "*** Option $key is not supported"
+            echo $USAGE_HELP
+            exit 1
+            ;;
+    esac
+
+    if [ -z "$value" ]; then
+        echo $USAGE_HELP
+        exit 1
+    fi
 done
 
 ### Directory of this script
-pushd . > /dev/null
-SCRIPT_DIR="${BASH_SOURCE[0]}"
-while([ -h "${SCRIPT_DIR}" ]); do
-    cd "`dirname "${SCRIPT_DIR}"`"
-    SCRIPT_DIR="$(readlink "`basename "${SCRIPT_DIR}"`")"
+# https://stackoverflow.com/a/246128
+SOURCE="${BASH_SOURCE[0]}"
+while [ -h "$SOURCE" ]; do # resolve $SOURCE until the file is no longer a symlink
+  SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
+  SOURCE="$(readlink "$SOURCE")"
+  [[ $SOURCE != /* ]] && SOURCE="$SCRIPT_DIR/$SOURCE" # if $SOURCE was a relative symlink, we need to resolve it relative to the path where the symlink file was located
 done
-cd "`dirname "${SCRIPT_DIR}"`" > /dev/null
-SCRIPT_DIR="`pwd`"
-popd  > /dev/null
+SCRIPT_DIR="$( cd -P "$( dirname "$SOURCE" )" >/dev/null && pwd )"
+
+pushd . > /dev/null
+cd "${SCRIPT_DIR}/.."
+SCRIPT_PARENT_DIR=`pwd`
+popd > /dev/null
 
 ### Variables
 buildDir="${SCRIPT_DIR}"
 buildScript="${buildDir}/build.fsx"
-repositoryDir=`realpath "${buildDir}/.."`
+repositoryDir="$SCRIPT_PARENT_DIR"
 fakeDir="${buildDir}/fake"
 
 FAKE="${fakeDir}/fake"
